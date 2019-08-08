@@ -1,6 +1,5 @@
 package com.person.test;
 
-import com.person.basic.NetWorkClassLoader;
 import com.person.basic.SerializableImpl;
 import org.junit.Test;
 
@@ -64,23 +63,5 @@ public class BasicTest {
     /**
      * 类加载器测试类：测试没成功（错误示例暂时没解决）
      */
-    @Test
-    public void test03(){
 
-        try {
-            //测试加载网络中的class文件
-            String rootUrl = "http://localhost:9090/basic/classes";
-            String className = "com.person.basic.NetWorkClassLoaderSimple";
-            NetWorkClassLoader ncl1 = new NetWorkClassLoader(rootUrl);
-            NetWorkClassLoader ncl2 = new NetWorkClassLoader(rootUrl);
-            Class<?> clazz1 = ncl1.loadClass(className);
-            Class<?> clazz2 = ncl2.loadClass(className);
-            Object obj1 = clazz1.newInstance();
-            Object obj2 = clazz2.newInstance();
-            clazz1.getMethod("setSimple", Object.class).invoke(obj1,obj2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 }
