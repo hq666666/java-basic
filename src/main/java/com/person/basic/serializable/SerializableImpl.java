@@ -1,4 +1,4 @@
-package com.person.basic;
+package com.person.basic.serializable;
 
 import java.io.Serializable;
 

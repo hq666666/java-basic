@@ -6,7 +6,7 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   <servlet>
     <servlet-name>webClassLoader</servlet-name>
-    <servlet-class>com.person.basic.WebClassLoader</servlet-class>
+    <servlet-class>com.person.basic.classloader.WebClassLoader</servlet-class>
     <init-param>
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>

@@ -1,4 +1,4 @@
-package com.person.basic;
+package com.person.basic.classloader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class NetWorkClassLoader extends ClassLoader {
             throw new ClassNotFoundException();
         }
         clazz = defineClass(name, classData, 0, classData.length);	//将class的字节码数组转换成Class类的实例
-        //}
+       // }
         return clazz;
 
     }

@@ -15,7 +15,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomcatVesion>2.2</tomcatVesion>
+    <tomcat.vesion>2.2</tomcat.vesion>
+    <java.version>1.8</java.version>
   </properties>
 
   <dependencies>
@@ -34,13 +35,6 @@
       <!--导入servlet依赖已出现jar冲突，建议使用provided表示提供的运行的范围-->
       <scope>provided</scope>
     </dependency>
-    <!-- servlet依赖的jar包start -->
-    <!-- jsp依赖jar包start -->
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>javax.servlet.jsp-api</artifactId>
-      <version>2.3.1</version>
-    </dependency>
   </dependencies>
 
   <build>
@@ -52,7 +46,7 @@
             <path>/basic</path>
             <port>9090</port>
           </configuration>
-          <version>${tomcatVesion}</version>
+          <version>${tomcat.vesion}</version>
         </plugin>
       </plugins>
   </build>
