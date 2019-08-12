@@ -57,9 +57,9 @@ public class Genericity<T> {
         }
         return kvMap;
     }
-
-    public <R extends GenecirityAdapter> R getExtends(R pa){
-        return pa;
+    public static<T> void print(T pa){
+        System.out.println("静态方法时必须在方法中声明，即便类已声明相同的泛型类型但无法识别");
     }
+
 
 }
