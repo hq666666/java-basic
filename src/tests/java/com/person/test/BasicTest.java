@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class BasicTest {
         SerializableImpl example = new SerializableImpl(list.get(0), c, e, m);
         example.printData();
         try {
-            FileOutputStream os = new FileOutputStream("C:\\Data.txt");
+            FileOutputStream os = new FileOutputStream("C:/Data.txt");
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeObject(example);
             oos.flush();
@@ -53,7 +52,7 @@ public class BasicTest {
     public void test02() {
 
         try {
-            FileInputStream is = new FileInputStream("C:\\Data.txt");
+            FileInputStream is = new FileInputStream("C:/Data.txt");
             ObjectInputStream ois = new ObjectInputStream(is);
             SerializableImpl result =  (SerializableImpl)ois.readObject();
             result.printData();
@@ -88,9 +87,11 @@ public class BasicTest {
         System.out.println(int.class.isPrimitive());
         //判断是否为注解类型
         System.out.println(Auth.class.isAnnotation());
-        TypeVariable<Class<NetWorkClassLoaderSimple>>[] typeParameters = NetWorkClassLoaderSimple.class.getTypeParameters();
-        System.out.println(String.valueOf(typeParameters));
+//        TypeVariable<Class<NetWorkClassLoaderSimple>>[] typeParameters = NetWorkClassLoaderSimple.class.getTypeParameters();
+//        System.out.println(String.valueOf(typeParameters));
+        //获取对象的类型
         System.out.println(new TypeImpl().getTypeName());
+
     }
 
 }

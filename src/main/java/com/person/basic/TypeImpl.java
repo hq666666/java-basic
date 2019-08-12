@@ -6,6 +6,6 @@ public class TypeImpl implements Type {
 
 
     public String getTypeName() {
-        return toString();
+        return  toString();
     }
 }
