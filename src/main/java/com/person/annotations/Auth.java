@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Auth {
 
+    int  id()default -1;
+    String msg()default "";
 }
