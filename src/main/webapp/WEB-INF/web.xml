@@ -12,7 +12,6 @@
       <param-value>UTF-8</param-value>
     </init-param>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>webClassLoader</servlet-name>
     <url-pattern>/hello</url-pattern>

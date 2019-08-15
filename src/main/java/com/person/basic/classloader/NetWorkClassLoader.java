@@ -1,12 +1,10 @@
 package com.person.basic.classloader;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 
 /**
- * 自定义内加载器：
+ * 自定义内网络加载器：
  *
  *      必须继承ClassLoader类
  */
@@ -21,15 +19,12 @@ public class NetWorkClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        Class clazz = null;//this.findLoadedClass(name); // 父类已加载
-        //if (clazz == null) {	//检查该类是否已被加载过
-        byte[] classData = getClassData(name);	//根据类的二进制名称,获得该class文件的字节码数组
-        if (classData == null) {
+        byte[] classData = getClassData(name);
+        if(null == classData && classData.length < 0){
             throw new ClassNotFoundException();
+        }else {
+            return this.defineClass(name,classData,0,classData.length);
         }
-        clazz = defineClass(name, classData, 0, classData.length);	//将class的字节码数组转换成Class类的实例
-       // }
-        return clazz;
 
     }
     private byte[] getClassData(String name) {
@@ -38,8 +33,9 @@ public class NetWorkClassLoader extends ClassLoader {
             String path = classNameToPath(name);
             URL url = new URL(path);
             byte[] buff = new byte[1024*4];
+
+            is =url.openStream();
             int len = -1;
-            is = url.openStream();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             while((len = is.read(buff)) != -1) {
                 baos.write(buff,0,len);
@@ -60,7 +56,8 @@ public class NetWorkClassLoader extends ClassLoader {
     }
 
     private String classNameToPath(String name) {
-        return url + "/" + name.replace(".", "/") + ".class";
+
+        return url+"/"+name.replace(",","/")+".class";
     }
 
 }
