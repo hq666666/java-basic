@@ -1,6 +1,6 @@
 package com.person.Thread.current;
 
-public class User {
+public class User  {
 
     private String name;
 
@@ -10,6 +10,11 @@ public class User {
 
     public User(){
         System.out.println("调用user的构造器");
+    }
+
+    public User(String name, Integer age) {
+        this.name = name;
+        this.age = age;
     }
 
     public String getName() {
@@ -34,6 +39,15 @@ public class User {
 
     public static void setId(String id) {
         User.id = id;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 
 
