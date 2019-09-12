@@ -2,6 +2,7 @@ package com.person.test;
 
 import com.person.Thread.ThreadExample;
 import com.person.Thread.ThreadExample2;
+import com.person.Thread.current.lock.*;
 import org.junit.Test;
 
 public class ThreadTests {
@@ -112,5 +113,90 @@ public class ThreadTests {
        t2.join();
        System.out.println(example2.i+"============="+example2.j);
        System.out.println(example2.i==example2.j);
+
+
+   }
+
+    /**
+     * 测试ReentrantLock：
+     *
+     *      测试重入锁
+     */
+    @Test
+   public void test5() throws InterruptedException {
+
+       ReentrantLockExample example = new ReentrantLockExample();
+       Thread t1 = new Thread(example,"t1");
+       Thread t2 = new Thread(example,"t2");
+       t1.start();
+       t2.start();
+       t1.join();
+       t2.join();
+       System.out.println(example.result);
+   }
+
+    /**
+     * 消费者与生产者模式:
+     *
+     *      使用condition。规则生产一个，消费一个
+     */
+   @Test
+   public void test6() throws InterruptedException {
+      final ConditionExample example = new ConditionExample();
+      final   MultiProducer producer = new MultiProducer(example);
+      final MultiConsumer consumer = new MultiConsumer(example);
+
+      //生产线程
+       Thread t1 = new Thread(producer,"Thread-1");
+       Thread t2 = new Thread(producer,"Thread-2");
+       //消费线程
+       Thread t3 = new Thread(consumer,"Thread-3");
+       Thread t4 = new Thread(consumer,"Thread-4");
+       //线程启动
+       t1.start();
+       t2.start();
+       t3.start();
+       t4.start();
+       t1.join();
+       t2.join();
+       t3.join();
+       t4.join();
+       System.out.println(example.getCount()+example.getName());
+   }
+
+    /**
+     * 生产者-消费者模式：
+     *  synchronized:
+     *
+     *
+     */
+   @Test
+   public void test7() throws InterruptedException {
+       SynchronizedExample example = new SynchronizedExample();
+
+       MultiProducer producer = new MultiProducer(example);
+       MultiConsumer consumer = new MultiConsumer(example);
+       //生产线程
+       Thread t1 = new Thread(producer, "thread-1");
+       Thread t2 = new Thread(producer,"thread-2");
+       //消费线程
+       Thread t3 =new Thread(consumer,"thread-3");
+       Thread t4 = new Thread(consumer,"thread-4");
+
+       //线程启动
+       t1.start();
+       t2.start();
+       t3.start();
+       t4.start();
+       //当前线程执行并阻塞其他线程
+       t1.join();
+       t2.join();
+       t3.join();
+       t4.join();
+       System.out.println(example.getName()+example.getInventoryNum());
+   }
+   @Test
+   public void test8(){
+
    }
 }

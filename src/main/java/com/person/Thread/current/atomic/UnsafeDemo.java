@@ -1,5 +1,6 @@
-package com.person.Thread.current;
+package com.person.Thread.current.atomic;
 
+import com.person.Thread.current.User;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
