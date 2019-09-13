@@ -35,6 +35,16 @@
       <!--导入servlet依赖已出现jar冲突，建议使用provided表示提供的运行的范围-->
       <scope>provided</scope>
     </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.25</version>
+      </dependency>
   </dependencies>
 
   <build>

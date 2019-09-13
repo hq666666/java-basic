@@ -4,9 +4,16 @@ import com.person.Thread.ThreadExample;
 import com.person.Thread.ThreadExample2;
 import com.person.Thread.current.lock.*;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.*;
+
 
 public class ThreadTests {
-
+        private final static Logger log = LoggerFactory.getLogger(ThreadTests.class);
     /**
      * synchronized修饰实例方法的测试：
      *
@@ -195,8 +202,123 @@ public class ThreadTests {
        t4.join();
        System.out.println(example.getName()+example.getInventoryNum());
    }
+
+    /**
+     * 普通线程池创建:ThreadPoolExecutor
+     *
+     * @param1 corePoolSize: 核心线程数，一旦创建将不会释放
+     * @param2 maximumPoolsize: 最大线程数，允许创建最大线程数量，如果最大线程数等于核心线程数，则无法创建非核心线程；如果非核心线程处于空闲时，超过设置时间，则将会被回收，释放占用的资源；
+     * @param3 keepAliveTime 空闲线程的存活时间；
+     * @param4 unit :时间单位(空闲线程存活时间单位)
+     * @param5 workQueue:任务队列，存储暂时无法执行的任务，等待空闲线程来执行任务；
+     * @param6 threadFactory:线程工厂，用于创建线程
+     * @param7 handler：当线程边界和队列容量以及达到最大是，用于处理阻塞的程序；
+     */
    @Test
    public void test8(){
+       ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(5,10,300l,TimeUnit.SECONDS,new LinkedBlockingDeque<>(512), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+       for(int i =0;i<20;i++){
 
+           poolExecutor.execute(()->{
+               for(int j=0;j<100;j++){
+                   System.out.println("第"+j+"组"+Thread.currentThread().getName()+"线程正在执行");
+               }
+           });
+           System.out.println(poolExecutor.getActiveCount());
+           System.out.println(poolExecutor.getQueue());
+       }
    }
+
+    /**
+     * 均分策略
+     */
+   @Test
+   public void test9(){
+       Map<Integer, Long> maps = new HashMap<>();
+       int threadNum = Runtime.getRuntime().availableProcessors();
+       for(int i=0;i<100;i++){
+           //采用取余的方式从而均匀的分配循环的数量；
+           int j = i%threadNum;
+           if (maps.containsKey(j)) {
+               maps.put(j, maps.get(j) + 1);
+           } else {
+               maps.put(j, 1L);
+           }
+       }
+     for(Map.Entry<Integer,Long> map :maps.entrySet()){
+         System.out.println(map.getKey()+"============"+map.getValue());
+     }
+   }
+   @Test
+   public void test10() throws ExecutionException, InterruptedException, TimeoutException {
+
+       ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(5);
+       SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       System.out.println(format.format(new Date()));
+       ScheduledFuture<?> future = threadPool.schedule(new Runnable() {
+           @Override
+           public void run() {
+               System.out.println("定时延迟执行" + format.format(new Date()));
+           }
+       }, 2l, TimeUnit.SECONDS);
+       Object o = future.get(2,TimeUnit.SECONDS);
+       boolean done = future.isDone();
+       boolean cancelled = future.isCancelled();
+       System.out.println(String.valueOf(o));
+       System.out.println(done+"==="+ cancelled);
+       /*threadPool.scheduleAtFixedRate(new Runnable() {
+           @Override
+           public void run() {
+               System.out.println("定时延迟周期循环执行"+format.format(new Date()));
+           }
+       },2l,3,TimeUnit.SECONDS);*/
+
+       /* threadPool.scheduleWithFixedDelay(new Runnable() {
+           @Override
+           public void run() {
+               System.out.println("定时延迟周期性延时循环执行" + format.format(new Date()));
+           }
+       }, 2l, 4, TimeUnit.SECONDS);*/
+   }
+
+    /**
+     * 使用C
+     * @throws ExecutionException
+     */
+   @Test
+   public void test11() throws ExecutionException {
+       int threadNum = Runtime.getRuntime().availableProcessors();
+       ExecutorService service = Executors.newFixedThreadPool(threadNum);
+       List<Callable<Long>> tasks = new ArrayList<>();
+       Callable<Long> task = new Callable<Long>() {
+           @Override
+           public Long call() throws Exception {
+               Long result = 0l;
+               for (int i = 0; i < 1000; i++) {
+                   result = create(i);
+               }
+               return result;
+           }
+       };
+      tasks.add(task);
+       try {
+           List<Future<Long>> all = service.invokeAll(tasks);
+           Iterator<Future<Long>> iterator = all.iterator();
+           while (iterator.hasNext()){
+               System.out.println(iterator.next().get());
+           }
+       } catch (InterruptedException e) {
+            log.warn("任务线程执行程序异常");
+       }finally {
+           //关闭线程池，并释放资源
+           service.shutdown();
+           service = null;
+       }
+   }
+
+    private Long create(Integer param) {
+        String name = Thread.currentThread().getName();
+        System.out.println(name+"线程执行次数"+param);
+        return Long.valueOf(param);
+    }
 }
