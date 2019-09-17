@@ -1,6 +1,6 @@
 package com.person.Thread.current;
 
-public class User  {
+public class User   {
 
     private String name;
 

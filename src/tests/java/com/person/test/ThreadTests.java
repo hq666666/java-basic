@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
@@ -321,4 +322,81 @@ public class ThreadTests {
         System.out.println(name+"线程执行次数"+param);
         return Long.valueOf(param);
     }
+
+    /**
+     * 测是callable任务的执行
+     */
+    @Test
+    public void test12(){
+        //获取处理器数量
+        int processors = Runtime.getRuntime().availableProcessors();
+        //创建线程池(建议正常使用处理器个数或者两倍数量作为开启的线程数)
+        final  ExecutorService service = Executors.newFixedThreadPool(processors*2);
+        List<Callable<Integer>> list = new ArrayList<>();
+        Callable<Integer> hello =null;
+       for(int i =0;i<10;i++){
+            //创建callable的任务
+           hello = Executors.callable(new Runnable() {
+               @Override
+               public void run() {
+                   System.out.println(Thread.currentThread().getName()+"hello");
+               }
+           }, 2);
+           list.add(hello);
+       }
+        try {
+           // List<Future<Integer>> results = service.invokeAll(list);
+            Integer integer = service.invokeAny(list);
+            System.out.println(integer);
+            /*results.forEach((j)->{
+                boolean cancel = j.cancel(true);
+                boolean falg = j.isCancelled();
+                System.out.println(cancel);
+                System.out.println(falg);
+            });*/
+           // System.out.println(results.size());
+           /* results.forEach((k)->{
+                try {
+                    Integer integer = k.get();
+                    System.out.println(integer);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+            });*/
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("线程中断","{}",list);
+        }
+            service.shutdown();
+
+
+    }
+
+    /**
+     * FutureTask使用
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @Test
+    public void test13() throws ExecutionException, InterruptedException, IOException {
+        final int count = Runtime.getRuntime().availableProcessors();
+        ExecutorService service = Executors.newFixedThreadPool(count * 2);
+        FutureTask<String> task = null;
+             task = new FutureTask<>(() -> {
+                System.out.println("apple");
+            }, "success");
+        //任务的取消：若在任务执行之前使用cancel方法可以取消任务，使之之后的任务将无法执行下去
+        /*boolean cancel = task.cancel(true);
+        System.out.println(cancel);*/
+        //任务的执行:使用FutureTask类的run方法进行执行
+        //task.run();
+        //使用多线程执行任务
+        service.submit(task);
+        System.out.println(task.get());
+
+
+    }
+
 }
